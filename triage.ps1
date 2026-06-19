@@ -97,6 +97,68 @@ function Get-TriageNetwork {
     return $networkList
 }
 
+function Get-TriagePersistence {
+    <# .SYNOPSIS
+    collecte les éléments de persistance #> 
 
-#Get-TriageSystemInfo
-#Get-TriageProcesses
+    Write-Host "[+] gathering persistence objects..." -ForegroundColor Cyan
+    
+    $persistenceItems = [System.Collections.Generic.List[PSCustomObject]]::new()
+    
+    $registryPaths = @(
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run",
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run",
+        "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Run",
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\RunOnce",
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce",
+        "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\RunOnce"
+    )
+    foreach ($path in $registryPaths) {
+        if (Test-Path $path) {
+            $properties = Get-Item -Path $path
+            foreach ($valueName in $properties.$valueName) {
+                $persistenceItems.Add([PSCustomObject]@{
+                        Type     = "Registry Run Key"
+                        Location = $path
+                        Name     = $valueName
+                        Command  = $value
+                    })
+            }
+        }
+    }    
+
+    $startupPaths = @(
+        "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\",
+        "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\StartUp"
+    )
+
+    foreach ($path in $startupPaths) {
+        if (Test-Path $path) {
+            $files = Get-ChildItem -Path $path -File
+            foreach ($file in $files) {
+                $persistenceItems.Add([PSCustomObject]@{ 
+                        Type     = "Startup Folder"
+                        Location = $path
+                        Name     = $file.Name
+                        Command  = $file.FullName
+                    })
+            }
+        }
+    }
+
+    $nonSystemServices = Get-CimInstance -ClassName Win32_Service | Where-Object { $_.StartMode -eq "Auto" -and $_.PathName -notlike "*System32*" -and $_.PathName -notlike "*SysWOW64*" }
+
+    foreach ($service in $nonSystemServices) {
+        $persistenceItems.Add([PSCustomObject]@{
+                Type     = "Auto / Non System Service"
+                Location = $service.Name
+                Name     = $service.DisplayName
+                Command  = $service.PathName
+            })
+    }
+
+    return $persistenceItems
+
+}
+
+
