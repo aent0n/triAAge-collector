@@ -15,6 +15,10 @@ A lightweight Windows forensic triage script coupled with a portable HTML dashbo
 *   **`triage.ps1`**: Runs on the target host to collect live system info, active processes (with parent-child relationships and file hashes), network connections, and common persistence mechanisms.
 *   **`report-viewer.html`**: A completely static, offline-ready dashboard that parses the output JSON, offering filterable, searchable, and resizable tables to pivot and detect anomalies quickly.
 
+<img width="1053" height="163" alt="ps1_screenshot" src="https://github.com/user-attachments/assets/5cc16965-9e80-4878-bbd9-5517dea5b05b" />
+<img width="1053" height="754" alt="viewer_screenshot" src="https://github.com/user-attachments/assets/a91cbf03-cd53-4fd3-b6bc-0dca8889b716" />
+
+
 ---
 
 ## Key Features
