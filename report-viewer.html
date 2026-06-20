@@ -276,19 +276,19 @@
                 <div class="value" id="val-hostname">-</div>
             </div>
             <div class="card">
-                <h3>Utilisateur</h3>
+                <h3>User</h3>
                 <div class="value" id="val-user" style="font-size: 16px;">-</div>
             </div>
             <div class="card">
-                <h3>Processus</h3>
+                <h3>Process</h3>
                 <div class="value" id="val-proc-count">0</div>
             </div>
             <div class="card">
-                <h3>Connexions</h3>
+                <h3>Connections</h3>
                 <div class="value" id="val-net-count">0</div>
             </div>
             <div class="card">
-                <h3>Persistances</h3>
+                <h3>Persistence</h3>
                 <div class="value" id="val-pers-count">0</div>
             </div>
         </div>
@@ -316,7 +316,7 @@
         <div id="tab-processes" class="tab-content active">
             <div class="controls">
                 <input type="text" id="search-proc" class="search-input"
-                    placeholder="Filtrer par nom de processus, PID, chemin, arguments..." onkeyup="filterProcesses()">
+                    placeholder="Filter by process name, PID, path, arguments..." onkeyup="filterProcesses()">
             </div>
             <div class="table-container">
                 <table id="proc-table">
@@ -449,7 +449,7 @@
                     <td style="font-weight: bold; color: var(--primary);">${proc.PID}</td>
                     <td>${proc.PPID}</td>
                     <td><strong>${escapeHtml(proc.Name)}</strong></td>
-                    <td style="font-family: monospace; font-size: 12px; color: ${proc.CommandLine ? '#ffb454' : 'var(--text-muted)'}">${proc.CommandLine ? escapeHtml(proc.CommandLine) : '<i>Aucun argument</i>'}</td>
+                    <td style="font-family: monospace; font-size: 12px; color: ${proc.CommandLine ? '#ffb454' : 'var(--text-muted)'}">${proc.CommandLine ? escapeHtml(proc.CommandLine) : '<i>No arguments</i>'}</td>
                     <td style="font-size: 13px;">${escapeHtml(proc.ExecutablePath || "N/A")}</td>
                     <td style="font-family: monospace; font-size: 11px;">${proc.SHA256}</td>
                 `;

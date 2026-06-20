@@ -19,7 +19,7 @@ A lightweight Windows forensic triage script coupled with a portable HTML dashbo
 
 ## Key Features
 
-### 1. Host Triage Collector
+### 1. Host triage collector
 *   **System Profiling**: Gathers Hostname, OS details, current user context, and timezone-aware local time (ISO 8601).
 *   **Process Auditing**:
     *   Retrieves process command lines.
@@ -31,7 +31,7 @@ A lightweight Windows forensic triage script coupled with a portable HTML dashbo
     *   Scans User & System Startup directories.
     *   Lists non-system automatic services (de-noised by filtering standard Windows paths).
 
-### 2. Interactive Analysis Web App
+### 2. Interactive analysis web app
 *   **Zero-Dependency**: Built with pure vanilla HTML, CSS, and JS. No server or internet connection required.
 *   **Interactive Tables**: Supports real-time text filtering and resizable columns (drag-and-drop handles) to easily read long command lines.
 *   **Forensic Heuristics**: Automatically highlights suspicious process paths (e.g., binaries executed from `\Temp\` or `\AppData\`).
