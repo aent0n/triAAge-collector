@@ -8,7 +8,7 @@ A lightweight Windows forensic triage script coupled with a portable HTML dashbo
 
 ---
 
-## Project Overview
+## Project overview
 
 **triAAge-collector** is a two-part DFIR tool designed for analysts to quickly gather volatile artifacts from a suspected Windows machine and visualize them immediately in a secure, local web dashboard.
 
@@ -21,7 +21,7 @@ A lightweight Windows forensic triage script coupled with a portable HTML dashbo
 
 ---
 
-## Key Features
+## Key features
 
 ### 1. Host triage collector
 *   **System Profiling**: Gathers Hostname, OS details, current user context, and timezone-aware local time (ISO 8601).
