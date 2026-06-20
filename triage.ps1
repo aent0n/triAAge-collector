@@ -18,7 +18,7 @@ function Get-TriageSystemInfo {
         OSVersion   = $os.Version
         OSBuild     = $os.BuildNumber
         CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-        LocalTime   = (Get-Date).ToString("yyyy-MM-ddTHH:mm:ss:zzz")
+        LocalTime   = (Get-Date).ToString("yyyy-MM-ddTHH:mm:sszzz")
         Timezone    = $tz
         InstallDate = $os.InstallDate
     }
@@ -116,12 +116,12 @@ function Get-TriagePersistence {
     foreach ($path in $registryPaths) {
         if (Test-Path $path) {
             $properties = Get-Item -Path $path
-            foreach ($valueName in $properties.$valueName) {
+            foreach ($valueName in $properties.GetValueNames()) {
                 $persistenceItems.Add([PSCustomObject]@{
                         Type     = "Registry Run Key"
                         Location = $path
                         Name     = $valueName
-                        Command  = $value
+                        Command  = $properties.GetValue($valueName)
                     })
             }
         }
@@ -161,4 +161,58 @@ function Get-TriagePersistence {
 
 }
 
+function Invoke-TriAAge {
+ 
+    <# .SYNOPSIS
+    lancement global#>
+    
+    Write-Host "[+] TriAAge started..." -ForegroundColor Green
 
+    $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+    $isAdmin = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+    
+    if (-not $isAdmin) {
+        Write-Host "[!] Please run as Administrator." -ForegroundColor Yellow
+        Write-Host "[!] File hash and log collection cannot be fully performed without admin rights`n" -ForegroundColor Yellow
+    }
+    else {
+        Write-Host "[+] Admin rights verified`n" -ForegroundColor Green
+    }
+
+    $systemInfo = Get-TriageSystemInfo
+    $processes = Get-TriageProcesses
+    $network = Get-TriageNetwork
+    $persistence = Get-TriagePersistence
+    
+    $report = [PSCustomObject]@{
+        Metadata    = [PSCustomObject]@{
+            CollectorVersion = "v0.4 early"
+            RunDate          = $systemInfo.LocalTime
+            Analyst          = $systemInfo.CurrentUser
+            AdminRights      = $isAdmin
+        }
+        SystemInfo  = $systemInfo
+        Processes   = $processes
+        Network     = $network
+        Persistence = $persistence
+    }
+
+    $outputDir = Join-Path $PSScriptRoot -ChildPath "TriAAge_Reports" 
+
+    if (-not (Test-Path $outputDir)) {
+        New-Item -Path $outputDir -ItemType Directory | Out-Null
+    }
+
+    $timestamp = ([datetime]$report.Metadata.RunDate).ToString("yyyyMMdd_HHmmss")
+    $filename = "TriAAge_$($systemInfo.hostname)_$timestamp.json"
+    $outputPath = Join-Path -Path $outputDir -ChildPath $filename
+    
+    Write-Host "[+] saving JSON report to $outputPath`n" -ForegroundColor Green
+    $reportJson = $report | ConvertTo-Json -Depth 10
+    $reportJson | Out-File -FilePath $outputPath -Encoding UTF8
+    
+    Write-Host "[+] TriAAge completed successfully!" -ForegroundColor Green
+}
+
+Invoke-TriAAge
