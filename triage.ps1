@@ -187,7 +187,7 @@ function Invoke-TriAAge {
     
     $report = [PSCustomObject]@{
         Metadata    = [PSCustomObject]@{
-            CollectorVersion = "v0.4 early"
+            CollectorVersion = "v0.6"
             RunDate          = $systemInfo.LocalTime
             Analyst          = $systemInfo.CurrentUser
             AdminRights      = $isAdmin
